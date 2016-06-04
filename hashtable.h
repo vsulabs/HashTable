@@ -8,7 +8,7 @@ using HashFunction = _HashFunction*;
 class HashTable
 {
 public:
-    static const int N = 19;
+    static const int N = 199;
     enum CellState { FREE, FULL, DEL };
 
     struct Cell
@@ -22,6 +22,7 @@ public:
     ~HashTable();
 
     int getCount() const;
+    int* getCollisionCount() const;
     valueType* toArray() const;
 
     bool find(const valueType& key) const;
@@ -38,6 +39,7 @@ protected:
 private:
     HashFunction hashFunc;
     Cell table[N];
+    int collisionCount[N];
     int count;
 
     // Коэффициенты

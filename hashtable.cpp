@@ -28,6 +28,11 @@ int HashTable::getCount() const
     return count;
 }
 
+int *HashTable::getCollisionCount() const
+{
+    return collisionCount;
+}
+
 valueType *HashTable::toArray() const
 {
     valueType *result = new valueType[N];
@@ -59,6 +64,8 @@ bool HashTable::del(const valueType& key)
 bool HashTable::add(const valueType& key)
 {
     int a0 = getHash(key);
+    collisionCount[a0]++;
+
     int a = a0;
     int i = 0;
     int d = -1;
@@ -124,6 +131,7 @@ bool HashTable::loadFromFile(const std::string& fileName)
         if (!added)
             return false;
     }
+
     return true;
 }
 
