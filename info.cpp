@@ -1,11 +1,11 @@
 #include "info.h"
 
-int getHash(const valueType& key)
+int getHash(const Key& key)
 {
     return key.length();
 }
 
-bool isKeysEquals(const valueType& key1, const valueType& key2)
+bool isKeysEquals(const Key& key1, const Key& key2)
 {
     return (key1 == key2);
 }

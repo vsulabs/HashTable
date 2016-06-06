@@ -7,10 +7,13 @@ HashTable::HashTable(int C, int D, HashFunction f)
     this->C = C;
     this->D = D;
     this->hashFunc = f;
-    Clear();
+    for (int i = 0; i < N; i++) {
+        collisionCount[i] = 0;
+    }
+    clear();
 }
 
-void HashTable::Clear()
+void HashTable::clear()
 {
     this->count = 0;
     for (int i = 0; i < N; i++) {
@@ -20,7 +23,7 @@ void HashTable::Clear()
 
 HashTable::~HashTable()
 {
-    Clear();
+    clear();
 }
 
 int HashTable::getCount() const
@@ -28,40 +31,49 @@ int HashTable::getCount() const
     return count;
 }
 
-int *HashTable::getCollisionCount() const
+int* HashTable::getCollisionCount()
 {
     return collisionCount;
 }
 
-valueType *HashTable::toArray() const
+QStringList HashTable::getWords() const
 {
-    valueType *result = new valueType[N];
+    QStringList list;
+
     for (int i = 0; i < N; i++) {
-        result[i] = table[i].info;
+        if (table[i].state == FULL) {
+            QString word = QString::fromStdString(table[i].info);
+            list.append(word);
+        }
     }
 
-    return result;
+    return list;
 }
 
-bool HashTable::find(const valueType& key) const
+bool HashTable::isEmpty() const
+{
+    return count == 0;
+}
+
+bool HashTable::find(const Key& key) const
 {
     int a = indexOf(key);
     return a >= 0;
 }
 
-bool HashTable::del(const valueType& key)
-{
-    int a = indexOf(key);
-    if (a < 0) {
-        return false;
-    }
+//bool HashTable::del(const Key& key)
+//{
+//    int a = indexOf(key);
+//    if (a < 0) {
+//        return false;
+//    }
 
-    table[a].state = DEL;
-    count--;
-    return true;
-}
+//    table[a].state = DEL;
+//    count--;
+//    return true;
+//}
 
-bool HashTable::add(const valueType& key)
+bool HashTable::add(const Key& key)
 {
     int a0 = getHash(key);
     collisionCount[a0]++;
@@ -124,7 +136,7 @@ bool HashTable::loadFromFile(const std::string& fileName)
     if (!f.is_open())
         return false;
 
-    valueType info;
+    Key info;
 
     while (f >> info) {
         bool added = this->add(info);
@@ -135,7 +147,7 @@ bool HashTable::loadFromFile(const std::string& fileName)
     return true;
 }
 
-int HashTable::getHash(const valueType& info) const
+int HashTable::getHash(const Key& info) const
 {
     return hashFunc(info) % N;
 }
@@ -146,7 +158,7 @@ int HashTable::nextCell(int a0, int &i) const
     return (a0 + C*i + D*i*i) % N;
 }
 
-int HashTable::indexOf(const valueType& info) const
+int HashTable::indexOf(const Key& info) const
 {
     int a0 = getHash(info);
     int a = a0;

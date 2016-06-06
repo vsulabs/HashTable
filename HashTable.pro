@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     info.cpp \
-    hashtable.cpp
+    hashtable.cpp \
+    hashtablegui.cpp
 
 HEADERS  += mainwindow.h \
     info.h \
-    hashtable.h
+    hashtable.h \
+    hashtablegui.h
 
 FORMS    += mainwindow.ui

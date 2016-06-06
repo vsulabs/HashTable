@@ -2,7 +2,9 @@
 #define HASHTABLE_H
 #include "info.h"
 
-using _HashFunction = int(const valueType& key);
+#include <QStringList>
+
+using _HashFunction = int(const Key& key);
 using HashFunction = _HashFunction*;
 
 class HashTable
@@ -13,33 +15,33 @@ public:
 
     struct Cell
     {
-        valueType info;
+        Key info;
         CellState state;
     };
 
     HashTable(int C, int D, HashFunction hashFunc);
-    void Clear();
     ~HashTable();
 
     int getCount() const;
-    int* getCollisionCount() const;
-    valueType* toArray() const;
+    int* getCollisionCount();
+    QStringList getWords() const;
 
-    bool find(const valueType& key) const;
-    bool del(const valueType& key);
-    bool add(const valueType& key);
+    bool isEmpty() const;
+    bool find(const Key& key) const;
+    //bool del(const Key& key);
+    bool add(const Key& key);
+    void clear();
 
     void saveToFile(const std::string& fileName) const;
     bool loadFromFile(const std::string& fileName);
-
 protected:
-    int getHash(const valueType& key) const;
+    int getHash(const Key& key) const;
     int nextCell(int a0, int& i) const;
-    int indexOf(const valueType& key) const;
+    int indexOf(const Key& key) const;
 private:
     HashFunction hashFunc;
-    Cell table[N];
     int collisionCount[N];
+    Cell table[N];
     int count;
 
     // Коэффициенты
